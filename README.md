@@ -12,7 +12,7 @@
 
 ### 反转单链表
 
->  来源：  [LeetCode 206题]: https://leetcode-cn.com/problems/reverse-linked-list/
+>  来源：  [LeetCode 206题](https://leetcode-cn.com/problems/reverse-linked-list/)
 
 示例：
 
