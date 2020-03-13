@@ -1,5 +1,12 @@
 > 所有涉及到的数据结构都会进行一个简单的阐述，关于如何设计一个基于对象的数据结构这里不作说明
 
+
+
+* [链表](#链表)
+  * [反转链表](#反转链表)
+     * [反转单链表](#反转单链表)
+     * [区间反转](#区间反转)
+
 # 链表
 
 ---
@@ -160,5 +167,65 @@ var reverseBetween = function(head, m, n) {
 }
 ```
 
+### 两两交换链表节点
 
+> 来源：  [LeetCode 24题](https://leetcode-cn.com/problems/swap-nodes-in-pairs/)
+
+给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。**你不能只是单纯的改变节点内部的值**，而是需要实际的进行节点交换。
+
+**示例:**
+
+```js
+给定 1->2->3->4, 你应该返回 2->1->4->3.
+```
+
+#### 解题思路
+
+![两两交换链表节点.png](https://i.loli.net/2020/03/13/hKQI2WmEFVDeHzX.png)
+
+1. 如图，首先我们建立一个虚拟头结点`dummyHead`帮助分析（在很多链表相关的题目中，建立一个虚拟头结点有时候会对解题很有帮助），然后定义一个指针p，指向`dummyHead`的位置，记录下`p.next`和`p.next.next`的节点。
+2. 让1的next指向2的next。
+3. 再让二的next指向1。
+4. 让`dummyHead`的next指向2，这样就实现了两个节点的交换，最后将指针p指向1。
+5. 依次循环，当`p.next`或者`p.next.next`为空时，就找不到新的一组两两交换的节点，循环结束。
+
+#### 循环解决
+
+```js
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var swapPairs = function (head) {
+    if (head === null || head.next === null) return head
+
+    let p = dummyHead = new ListNode()
+    let node1, node2
+    dummyHead.next = head
+    while ((node1 = p.next) && (node2 = p.next.next)) {
+        node1.next = node2.next
+        node2.next = node1
+        p.next = node2
+        p = node1
+    }
+    return dummyHead.next
+};
+```
+
+#### 递归解决
+
+好好理解一下递归解法的调用过程
+
+```js
+var swapPairs = function (head) {
+    if (head === null || head.next === null) return head
+
+    let node1 = head,
+        node2 = head.next
+    node1.next = swapPairs(node2.next)
+    node2.next = node1
+
+    return node2
+};
+```
 
