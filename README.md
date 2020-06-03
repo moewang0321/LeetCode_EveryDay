@@ -254,7 +254,7 @@ k 是一个正整数，它的值小于或等于链表的长度。
 你的算法只能使用常数的额外空间。
 你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。
 
-#### 思路
+#### j解题思路
 
 和两两交换类似，不同的是这回每组内有K个节点需要反转
 
@@ -322,3 +322,123 @@ var reverseKGroup = function (head, k) {
 };
 ```
 
+## 环形链表
+
+### 判断环形链表
+
+> 来源：  [LeetCode 141题](https://leetcode-cn.com/problems/linked-list-cycle/)
+
+给定一个链表，判断链表中是否有环。
+
+为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。
+
+示例1：
+
+```js
+输入：head = [3,2,0,-4], pos = 1
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点。
+```
+
+![示例1](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png)
+
+示例2：
+
+```js
+输入：head = [1,2], pos = 0
+输出：true
+解释：链表中有一个环，其尾部连接到第一个节点。
+```
+
+![示例2](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test2.png)
+
+示例 3：
+
+```js
+输入：head = [1], pos = -1
+输出：false
+解释：链表中没有环。	
+```
+
+![示例3](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test3.png)
+
+#### 解题思路
+
+方法1：判断是否是环形链表只需要知道同一个节点是否重复出现过，这样在JS中我们就有了快捷方式，用Set数据结构来保存节点，可以进行判重。
+
+方法2：利用快慢指针的数学思想，就像两个人在环形跑道上跑步，一个块一个慢，那么总会有一个时间点，快的人会再次遇到慢的人，而如果没有环，那只会越来越远。
+
+#### Set判重
+
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+
+/**
+ * @param {ListNode} head
+ * @return {boolean}
+ */
+var hasCycle = function(head) {
+    let set = new Set()
+
+    let p = head
+    while(p) {
+        if(set.has(p)) return true
+        set.add(p)
+        p = p.next
+    }
+    return false
+};
+```
+
+#### 快慢指针
+
+这里设置快指针一次走两步，慢指针一次走一步
+
+```js
+/*
+ * @lc app=leetcode.cn id=141 lang=javascript
+ *
+ * [141] 环形链表
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+
+/**
+ * @param {ListNode} head
+ * @return {boolean}
+ */
+var hasCycle = function (head) {
+    let dummyHead = new ListNode();
+    dummyHead.next = head;
+    let fast = slow = dummyHead;
+    // 零个结点或者一个结点，无环
+    if (fast.next == null || fast.next.next == null)
+        return false;
+    while (fast && fast.next) {
+        fast = fast.next.next;
+        slow = slow.next;
+        // 相遇
+        if (fast == slow) {
+            return true;
+        }
+    }
+    return false;
+};
+```
+
+接下来可以思考一下怎么去找到环形链表的起点呢
+
+### 找到环形链表的起点
